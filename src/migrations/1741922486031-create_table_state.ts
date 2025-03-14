@@ -6,6 +6,7 @@ export class createTableState1675388988978 implements MigrationInterface {
             CREATE TABLE public.state (
                 id integer NOT NULL,
                 name character varying NOT NULL,
+                uf varchar(2) NOT NULL,
                 created_at timestamp without time zone DEFAULT now() NOT NULL,
                 updated_at timestamp without time zone DEFAULT now() NOT NULL,
                 primary key (id)
