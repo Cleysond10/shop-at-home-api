@@ -14,6 +14,8 @@ import { PaymentStatusModule } from './payment-status/payment-status.module';
 import { PaymentModule } from './payment/payment.module';
 import { OrderModule } from './order/order.module';
 import { OrderProductModule } from './order-product/order-product.module';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { OrderProductModule } from './order-product/order-product.module';
     CityModule,
     AddressModule,
     CacheModule,
+    AuthModule,
+    JwtModule,
     CategoryModule,
     ProductModule,
     CartModule,

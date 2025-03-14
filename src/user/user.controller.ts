@@ -1,42 +1,69 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
-  Delete,
+  Patch,
+  Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
+import { Roles } from '../decorators/roles.decorator';
+import { UserId } from '../decorators/user-id.decorator';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { UserResponseDto } from './dtos/user-response.dto';
+import { UpdatePasswordDTO } from './dtos/update-password.dto';
+import { UserEntity } from './entities/user.entity';
+import { UserType } from './enum/user-type.enum';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Roles(UserType.Root)
+  @Post('/admin')
+  async createAdmin(@Body() createUser: CreateUserDto): Promise<UserEntity> {
+    return this.userService.createUser(createUser, UserType.Admin);
+  }
+
+  @UsePipes(ValidationPipe)
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async createUser(@Body() createUser: CreateUserDto): Promise<UserEntity> {
+    return this.userService.createUser(createUser);
   }
 
+  @Roles(UserType.Admin, UserType.Root)
+  @Get('/all')
+  async getAllUser(): Promise<UserResponseDto[]> {
+    return (await this.userService.getAllUser()).map(
+      (userEntity) => new UserResponseDto(userEntity),
+    );
+  }
+
+  @Roles(UserType.Admin, UserType.Root)
+  @Get('/:userId')
+  async getUserById(@Param('userId') userId: number): Promise<UserResponseDto> {
+    return new UserResponseDto(
+      await this.userService.getUserByIdUsingRelations(userId),
+    );
+  }
+
+  @Roles(UserType.Admin, UserType.Root, UserType.User)
+  @Patch()
+  @UsePipes(ValidationPipe)
+  async updatePasswordUser(
+    @Body() updatePasswordDTO: UpdatePasswordDTO,
+    @UserId() userId: number,
+  ): Promise<UserEntity> {
+    return this.userService.updatePasswordUser(updatePasswordDTO, userId);
+  }
+
+  @Roles(UserType.Admin, UserType.Root, UserType.User)
   @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  async getInfoUser(@UserId() userId: number): Promise<UserResponseDto> {
+    return new UserResponseDto(
+      await this.userService.getUserByIdUsingRelations(userId),
+    );
   }
 }
