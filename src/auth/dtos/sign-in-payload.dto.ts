@@ -1,6 +1,6 @@
 import { UserEntity } from '../../user/entities/user.entity';
 
-export class SignInPayloadDto {
+export class SignInPayloadDTO {
   id: number;
   typeUser: number;
 

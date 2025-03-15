@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { encryptPassword, validatePassword } from '../utils/password';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dtos/create-user.dto';
+import { CreateUserDTO } from './dtos/create-user.dto';
 import { UpdatePasswordDTO } from './dtos/update-password.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserType } from './enum/user-type.enum';
@@ -20,7 +20,7 @@ export class UserService {
   ) {}
 
   async createUser(
-    createUserDto: CreateUserDto,
+    createUserDto: CreateUserDTO,
     userType?: number,
   ): Promise<UserEntity> {
     const user = await this.findUserByEmail(createUserDto.email).catch(
@@ -40,7 +40,7 @@ export class UserService {
   }
 
   async getUserByIdUsingRelations(userId: number): Promise<UserEntity> {
-    return this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: {
         id: userId,
       },
@@ -52,6 +52,12 @@ export class UserService {
         },
       },
     });
+
+    if (!user) {
+      throw new NotFoundException(`UserId: ${userId} Not Found`);
+    }
+
+    return user;
   }
 
   async getAllUser(): Promise<UserEntity[]> {

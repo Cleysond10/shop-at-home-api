@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { Roles } from '../decorators/roles.decorator';
 import { UserId } from '../decorators/user-id.decorator';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UserResponseDto } from './dtos/user-response.dto';
+import { CreateUserDTO } from './dtos/create-user.dto';
+import { UserResponseDTO } from './dtos/user-response.dto';
 import { UpdatePasswordDTO } from './dtos/update-password.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserType } from './enum/user-type.enum';
@@ -23,28 +23,28 @@ export class UserController {
 
   @Roles(UserType.Root)
   @Post('/admin')
-  async createAdmin(@Body() createUser: CreateUserDto): Promise<UserEntity> {
+  async createAdmin(@Body() createUser: CreateUserDTO): Promise<UserEntity> {
     return this.userService.createUser(createUser, UserType.Admin);
   }
 
   @UsePipes(ValidationPipe)
   @Post()
-  async createUser(@Body() createUser: CreateUserDto): Promise<UserEntity> {
+  async createUser(@Body() createUser: CreateUserDTO): Promise<UserEntity> {
     return this.userService.createUser(createUser);
   }
 
   @Roles(UserType.Admin, UserType.Root)
   @Get('/all')
-  async getAllUser(): Promise<UserResponseDto[]> {
+  async getAllUser(): Promise<UserResponseDTO[]> {
     return (await this.userService.getAllUser()).map(
-      (userEntity) => new UserResponseDto(userEntity),
+      (userEntity) => new UserResponseDTO(userEntity),
     );
   }
 
   @Roles(UserType.Admin, UserType.Root)
   @Get('/:userId')
-  async getUserById(@Param('userId') userId: number): Promise<UserResponseDto> {
-    return new UserResponseDto(
+  async getUserById(@Param('userId') userId: number): Promise<UserResponseDTO> {
+    return new UserResponseDTO(
       await this.userService.getUserByIdUsingRelations(userId),
     );
   }
@@ -61,8 +61,8 @@ export class UserController {
 
   @Roles(UserType.Admin, UserType.Root, UserType.User)
   @Get()
-  async getInfoUser(@UserId() userId: number): Promise<UserResponseDto> {
-    return new UserResponseDto(
+  async getInfoUser(@UserId() userId: number): Promise<UserResponseDTO> {
+    return new UserResponseDTO(
       await this.userService.getUserByIdUsingRelations(userId),
     );
   }

@@ -1,15 +1,15 @@
-import { SignInPayloadDto } from '../auth/dtos/sign-in-payload.dto';
+import { SignInPayloadDTO } from '../auth/dtos/sign-in-payload.dto';
 
-export const authorizantionToSignInPayload = (
-  authorization: string,
-): SignInPayloadDto | undefined => {
-  const authorizationSplited = authorization.split('.');
+export const authorizationToSignInPayload = (
+  token: string,
+): SignInPayloadDTO | undefined => {
+  const parts = token.split('.');
 
-  if (authorizationSplited.length < 3 || !authorizationSplited[1]) {
+  if (parts.length < 3 || !parts[1]) {
     return undefined;
   }
 
   return JSON.parse(
-    Buffer.from(authorizationSplited[1], 'base64').toString('ascii'),
+    Buffer.from(parts[1], 'base64').toString('ascii'),
   );
 };
