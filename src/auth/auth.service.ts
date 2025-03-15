@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { validatePassword } from '../utils/password';
+import { validatePassword } from '../utils/password-handler';
 import { UserResponseDTO } from '../user/dtos/user-response.dto';
 import { UserEntity } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
