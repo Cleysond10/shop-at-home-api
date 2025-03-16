@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class crateTableCartProduct1675855589039 implements MigrationInterface {
+export class crateTableCartProduct1741922613216 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.query(`
             CREATE TABLE public.cart_product (
