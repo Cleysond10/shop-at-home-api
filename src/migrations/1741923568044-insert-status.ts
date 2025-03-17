@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class insertStatus1676323439062 implements MigrationInterface {
+export class insertStatus1741923568044 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.query(`
             INSERT INTO public.payment_status(id, name)	VALUES (1, 'Done');

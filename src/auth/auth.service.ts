@@ -7,6 +7,7 @@ import { UserService } from '../user/user.service';
 import { SignInDTO } from './dtos/sign-in.dto';
 import { SignInPayloadDTO } from './dtos/sign-in-payload.dto';
 import { SignInResponseDTO } from './dtos/sign-in-response.dto';
+import { SignUpDTO } from './dtos/sign-up.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,5 +34,9 @@ export class AuthService {
       accessToken: this.jwtService.sign({ ...new SignInPayloadDTO(user) }),
       user: new UserResponseDTO(user),
     };
+  }
+
+  async signUp(signUpDTO: SignUpDTO): Promise<UserEntity> {
+    return this.userService.createUser(signUpDTO);
   }
 }

@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class insertRootInUser1675770516768 implements MigrationInterface {
+export class insertInUser1741923612595 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.query(`
             INSERT INTO public."user"(
-                name, email, cpf, type_user, phone, password)
-                VALUES ('root', 'root@root.com', '12345678901', 2, '31925325252', '$2b$10$BhaMKrzUdPJFaHLcdvls7.lFMHojH9/sG/jwrp.Is0YXIlpBe4gI.');
+                name, email, cpf, type, phone, password)
+                VALUES ('root', 'root@root.com', '12345678901', 2, '81900000000', '$2a$12$TXAubZ/QHRiFu5o8v6ePD.4lbPqmqSXivx5vUlbrxQHx7pz3diVe.');
         `);
   }
 

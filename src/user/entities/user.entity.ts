@@ -20,7 +20,7 @@ export class UserEntity {
   @Column({ name: 'email', nullable: false })
   email: string;
 
-  @Column({ name: 'phone' })
+  @Column({ name: 'phone', nullable: false })
   phone: string;
 
   @Column({ name: 'cpf', nullable: false })
@@ -29,8 +29,8 @@ export class UserEntity {
   @Column({ name: 'password', nullable: false })
   password: string;
 
-  @Column({ name: 'type_user', nullable: false })
-  typeUser: number;
+  @Column({ name: 'type', nullable: false })
+  type: number;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
