@@ -52,11 +52,11 @@ export class UserController {
   @Roles(UserType.Admin, UserType.Root, UserType.User)
   @Patch()
   @UsePipes(ValidationPipe)
-  async updatePasswordUser(
+  async updateUserPassword(
     @Body() updatePasswordDTO: UpdatePasswordDTO,
     @UserId() userId: number,
   ): Promise<UserEntity> {
-    return this.userService.updatePasswordUser(updatePasswordDTO, userId);
+    return this.userService.updateUserPassword(updatePasswordDTO, userId);
   }
 
   @Roles(UserType.Admin, UserType.Root, UserType.User)

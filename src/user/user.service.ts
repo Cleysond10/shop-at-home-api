@@ -30,11 +30,12 @@ export class UserService {
     if (user) {
       throw new BadGatewayException('Email already exists');
     }
+
     const hashedPassword = await encryptPassword(createUserDto.password);
 
     return this.userRepository.save({
       ...createUserDto,
-      typeUser: userType ? userType : UserType.User,
+      type: userType ? userType : UserType.User,
       password: hashedPassword,
     });
   }
@@ -92,7 +93,7 @@ export class UserService {
     return user;
   }
 
-  async updatePasswordUser(
+  async updateUserPassword(
     updatePasswordDTO: UpdatePasswordDTO,
     userId: number,
   ): Promise<UserEntity> {
