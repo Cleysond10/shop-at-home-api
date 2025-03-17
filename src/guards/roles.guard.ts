@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { SignInPayloadDTO } from '../auth/dtos/sign-in-payload.dto';
@@ -13,27 +13,28 @@ export class RolesGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const { authorization } = request.headers;
+
     const requiredRoles = this.reflector.getAllAndOverride<UserType[]>(
       ROLES_KEY,
       [context.getHandler(), context.getClass()],
     );
 
-    if (!requiredRoles) {
-      return true;
-    }
+    if (!requiredRoles?.length) return true;
 
-    const { authorization } = context.switchToHttp().getRequest().headers;
+    if (!authorization) throw new UnauthorizedException('Authorization header is missing');
 
-    const signInPayload: SignInPayloadDTO | undefined = await this.jwtService
-      .verifyAsync(authorization, {
-        secret: process.env.JWT_SECRET,
-      })
-      .catch(() => undefined);
+    const signInPayload: SignInPayloadDTO | undefined = await this.jwtService.verifyAsync(authorization, {
+      secret: process.env.JWT_SECRET,
+    }).catch(() => undefined);
 
-    if (!signInPayload) {
-      return false;
-    }
+    if (!signInPayload) throw new UnauthorizedException('Invalid token or authentication error');
 
-    return requiredRoles.some((role) => role === signInPayload.userType);
+    const hasPermission = requiredRoles.includes(signInPayload.userType);
+
+    if (!hasPermission) throw new UnauthorizedException('Insufficient permissions');
+
+    return true;
   }
 }
